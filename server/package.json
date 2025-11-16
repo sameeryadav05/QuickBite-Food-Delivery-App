@@ -1,0 +1,25 @@
+{
+  "name": "quick-bite",
+  "version": "1.0.0",
+  "description": "Feature Rich Full Stack Food Delivery App with Live Tracking,payment integration,Role Based Authentication using MERN Stack.",
+  "keywords": [
+    "food-delivery-app",
+    "QuickBite",
+    "Full-stack-project",
+    "Mern-stack-project"
+  ],
+  "license": "ISC",
+  "author": "Sameer Manoj kumar Yadav",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon ./src/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "mongoose": "^8.19.4"
+  }
+}
