@@ -5,10 +5,23 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors:{
+        primaryColor:"#ff4d2d",
+        hoverColor:"#e64323",
+        bgColor:"#fff9f6",
+        borderColor:"#ddd",
+      }
+    },
   },
-  plugins: [require("daisyui")],
+  plugins: [require('daisyui')],
   daisyui: {
-    themes: ["light", "dark", "cupcake"],
+        themes: [
+      "light",
+      "dark",
+      "cupcake",
+      "halloween",
+      "dracula",
+    ],
   },
 };
