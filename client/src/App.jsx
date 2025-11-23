@@ -1,11 +1,14 @@
-import React from 'react'
+import React, { Suspense, lazy } from "react";
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import Signup from './pages/Signup'
-import Signin from './pages/Signin'
-import NotFound from './pages/NotFound'
-import OTPVerification from './components/OTP-Verification'
-import RootLayout from './components/RootLayout'
-import Home from './pages/Home'
+// import Home from "./pages/Home";
+import Loader from "./components/Loader";
+import RootLayout from "./components/RootLayout";
+
+const Home = lazy(() => import("./pages/Home"));
+const Signup = lazy(() => import("./pages/Signup"));
+const Signin = lazy(() => import("./pages/Signin"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const OTPVerification = lazy(() => import("./components/OTP-Verification"));
 
 
 
@@ -25,8 +28,10 @@ const router = createBrowserRouter([
 const App = () => {
   return (
     <>
-      <RouterProvider router={router}>
-      </RouterProvider>
+      <Suspense fallback={<Loader/>}>
+        <RouterProvider router={router} />
+      </Suspense>
+
     </>
   )
 }

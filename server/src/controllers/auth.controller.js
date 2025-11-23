@@ -106,6 +106,7 @@ export const ResendOtp = WrapAsync(async(req,res)=>{
     res.status(HttpStatus.OK).json({success:true,message:"OTP resent SuccessFully !"})
 })
 
+
 export const signin = WrapAsync(async (req, res) => {
   const { email, password } = req.body;
 

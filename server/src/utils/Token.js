@@ -18,6 +18,7 @@ export function verifyToken(token){
     const decoded = jwt.verify(token,process.env.JWT_SECRET,{
         issuer:'QuickBite.dev'
     })
+    return decoded;
 }
 
 
