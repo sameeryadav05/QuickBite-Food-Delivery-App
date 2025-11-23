@@ -1,8 +1,49 @@
-import React from 'react'
+import React, { useContext, useState } from 'react'
 import ramen from '../assets/ramen.png'
-import { NavLink } from 'react-router-dom'
+import { Navigate, NavLink, useNavigate } from 'react-router-dom'
+import { LoadingContext } from '../context/Loading'
+import Loader from '../components/Loader'
+import api from '../api.js'
+import toast from 'react-hot-toast'
+import { Authcontext } from '../context/Auth.jsx'
 const Signin = () => {
+  const [email,setEmail] = useState('');
+  const [password,setpassword] = useState('')
+  const {loading ,setLoading} = useContext(LoadingContext);
+  const {isAuthenticated,setisAuthenticated,setuser} = useContext(Authcontext)
+  const navigate = useNavigate()
+  async function handleSubmit(e)
+  { e.preventDefault()
+    try {
+      setLoading(true);
+      const res = await api.post('/auth/signin',{email,password});
+      console.log(res);
+      console.log(res.data.user)
+      setisAuthenticated(true);
+      setuser(res.data.user);
+    } catch (error) {
+      console.log(error)
+      toast.error(error.response.data.message)
+      if(error.response.data.message =='Please Verify Your Account !')
+      {
+        setisAuthenticated(false);
+        setuser(null);
+        return navigate(`/${error.response.data.userId}/otp-verification`)
+      }
+      
+    }
+    finally{
+      setLoading(false);
+    }
+  }
+
+  if(isAuthenticated)
+  {
+    return <Navigate to={'/'} replace/>
+  }
   return (
+    <>
+      {loading&&<Loader/>}
         <div className="min-h-screen w-full flex justify-center items-center p-4 bg-bgColor">
           <div className='bg-white rounded-xl shadow-lg w-full max-w-md p-1 pb-4 border-[1px] border-borderColor  md:max-w-lg lg:p-3 lg:pb-6'>
             <h1 className='flex items-center text-primaryColor gap-2 font-bold text-2xl lg:text-3xl tracking-wider'>
@@ -12,7 +53,7 @@ const Signin = () => {
             <p className='text-center text-slate-600 text-sm'>" continue to Order Delicious Food ! "</p>
     
             <div>
-                <form className='flex flex-col gap-3'>
+                <form className='flex flex-col gap-3' onSubmit={(e)=>handleSubmit(e)}>
     
                     <label className="input validator w-[90%] ml-5 mt-6">
                       <svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -27,7 +68,7 @@ const Signin = () => {
                           <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
                         </g>
                       </svg>
-                      <input type="email" placeholder="mail@gmail.com" required />
+                      <input type="email" placeholder="mail@gmail.com" required  value={email} onChange={(e)=>setEmail(e.target.value)}/>
                     </label>
                     <p className="validator-hint hidden text-[11px] ml-5 ">Enter valid email address</p>
                   
@@ -49,12 +90,14 @@ const Signin = () => {
                       <input
                         type="password"
                         required
+                        value={password}
+                        onChange={(e)=>setpassword(e.target.value)}
                         placeholder="Password"
                         title="Must contain at least 6 characters, including an uppercase letter, a lowercase letter, and a number"
                       />
                     </label>
 
-        <button type='submit' className='btn ml-5 w-[90%] mt-4 bg-primaryColor text-white hover:bg-hoverColor'>Sign in</button>
+        <button type='submit' className='btn ml-5 w-[90%] mt-4 bg-primaryColor text-white hover:bg-hoverColor disabled:bg-[#c46f51]' disabled={loading}>Sign in</button>
     </form>
         <div className='ml-5 w-[90%] mt-1'>
           <p className='underline text-primaryColor flex justify-between text-sm lg:text-md'>
@@ -77,6 +120,7 @@ const Signin = () => {
       </button>
           </div>
         </div>
+    </>
   )
 }
 

@@ -1,15 +1,35 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import ramen from "../assets/ramen.png";
+import { useNavigate, useParams } from 'react-router-dom'
+import api from '../api.js'
+import toast from "react-hot-toast";
+import { Authcontext } from "../context/Auth.jsx";
 
 const OTPVerification = () => {
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const inputRef = useRef([]);
+  const params = useParams()
+  const userId = params.userId;
+  const navigate = useNavigate()
+  const { isAuthenticated ,setisAuthenticated,user,setuser} = useContext(Authcontext);
 
-  function handleSubmit() {
+  
+  async function handleSubmit() {
     const finalOtp = otp.join("");
-    console.log(finalOtp);
+    try {
+      const res = await api.post('/auth/verify-otp',{userId,otp:finalOtp})
+      setisAuthenticated(true);
+      setuser(res.data.user)
+    } catch (error) {
+      
+      toast.error(error.response.data.message)
+    }
   }
 
+  if(isAuthenticated)
+  {
+    return navigate('/',{replace:true})
+  }
   // When user types a number
   function handleChange(e, index) {
     let value = e.target.value;
@@ -37,6 +57,16 @@ const OTPVerification = () => {
     }
   }
 
+  async function handleResend()
+  {
+    try {
+      const res = await api.post('/auth/Resend-otp',{userId})
+      console.log(res)
+    } catch (error) {
+      toast.success(error.response.data.message)
+    }
+  }
+
   useEffect(() => {
     inputRef.current[0].focus();
   }, []);
@@ -49,6 +79,7 @@ const OTPVerification = () => {
             <img src={ramen} className="size-12" />
             QuickBite
           </h1>
+          <p className="text-sm text-gray-500 font-semibold">6 digits verification code is sent to your email</p>
 
           <div className="mt-5 z-50 relative">
             <div className="flex gap-2">
@@ -65,7 +96,7 @@ const OTPVerification = () => {
                 />
               ))}
             </div>
-            <p className="text-primaryColor underline underline-offset-2 text-right mt-3">
+            <p className="text-primaryColor underline underline-offset-2 text-right mt-3" onClick={handleResend}>
               Resend otp !
             </p>
           </div>

@@ -1,11 +1,41 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import ramen from '../assets/ramen.png'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
+import api from '../api.js'
+import Loader from '../components/Loader.jsx'
+import { LoadingContext } from '../context/Loading.jsx'
+import toast from "react-hot-toast";
 
 const Signup = () => {
   const [role,setRole] = useState('user')
+  const [fullname,setFullname] = useState('')
+  const [email,setemail] = useState('')
+  const [password,setpassword] = useState('')
+  const [mobile,setMobile] = useState('')
+  const navigate = useNavigate();
+  const {loading,setLoading} = useContext(LoadingContext);
+
+
+  async function handleSubmit(event)
+  {
+    try {
+      event.preventDefault();
+      setLoading(true);
+      const res = await api.post('/auth/signup',{fullname,email,password,mobile,role})
+      navigate(`/${res.data.userId}/otp-verification`,{replace:true})
+      console.log(res)      
+    } catch (error) {
+        toast.error(error.response.data.message)
+    }
+    finally{
+      setLoading(false);
+    }
+  }
+
   
   return (
+    <>
+    {loading&&<Loader/>}
     <div className="min-h-screen w-full flex justify-center items-center p-4 bg-bgColor">
       <div className='bg-white rounded-xl shadow-lg w-full max-w-md p-1 pb-4 border-[1px] border-borderColor  md:max-w-lg lg:p-3 lg:pb-6'>
         <h1 className='flex items-center text-primaryColor gap-2 font-bold text-2xl lg:text-3xl tracking-wider'>
@@ -15,7 +45,7 @@ const Signup = () => {
         <p className='text-center  text-sm text-slate-600'>" Create account to Order Delicious Food ! "</p>
 
         <div>
-            <form className='flex flex-col gap-4'>
+            <form className='flex flex-col gap-4' onSubmit={(e)=>handleSubmit(e)}>
                 <label className="input validator w-[90%] ml-5 mt-6" >
                   <svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <g
@@ -30,6 +60,8 @@ const Signup = () => {
                     </g>
                   </svg>
                   <input
+                    value={fullname}
+                    onChange={(e)=>setFullname(e.target.value)}
                     type="text"
                     required
                     placeholder="full name"
@@ -57,7 +89,10 @@ const Signup = () => {
                       <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
                     </g>
                   </svg>
-                  <input type="email" placeholder="mail@gmail.com" required />
+                  <input type="email" 
+                    value={email}
+                    onChange={(e)=>setemail(e.target.value)}
+                  placeholder="mail@gmail.com" required />
                 </label>
                 <p className="validator-hint hidden text-[11px] ml-5 ">Enter valid email address</p>
               
@@ -79,6 +114,8 @@ const Signup = () => {
                   <input
                     type="password"
                     required
+                    value={password}
+                    onChange={(e)=>setpassword(e.target.value)}
                     placeholder="Password"
                     minlength="8"
                     pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}$"
@@ -108,6 +145,8 @@ const Signup = () => {
                   type="tel"
                   className="tabular-nums"
                   required
+                  value={mobile}
+                  onChange={(e)=>setMobile(e.target.value)}
                   placeholder="Phone"
                   pattern="[0-9]*"
                   minlength="10"
@@ -148,7 +187,7 @@ const Signup = () => {
 
       </div>
 
-    <button type='submit' className='btn rounded-lg ml-5 w-[90%] mt-4 bg-primaryColor text-white hover:bg-hoverColor'>Sign up</button>
+    <button type='submit' className='btn rounded-lg ml-5 w-[90%] mt-4 bg-primaryColor text-white hover:bg-hoverColor disabled:bg-[#c46f51]' disabled={loading}>Sign up</button>
 </form>
 
         <div className='ml-5 w-[90%] mt-1 text-sm lg:text-md'>
@@ -173,6 +212,7 @@ const Signup = () => {
 
       </div>
     </div>
+    </>
   )
 }
 

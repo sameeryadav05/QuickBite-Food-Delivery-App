@@ -14,7 +14,7 @@ AuthRouter.post('/Resend-otp',ResendOtp)
 
 
 AuthRouter.get('/verify-user',verifyAuth,(req,res)=>{
-    res.status(HttpStatus.OK).json({success:true,message:"User is Authenticated !"})
+    res.status(HttpStatus.OK).json({success:true,message:"User is Authenticated !",user:req.user})
 })
 
 export default AuthRouter
