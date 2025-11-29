@@ -5,6 +5,7 @@ import RootLayout from "./components/RootLayout";
 import LoadingProvider from "./context/Loading";
 import { Toaster } from "react-hot-toast";
 import Auth from "./context/Auth";
+import Forgotpassword from "./pages/Forgotpassword";
 // import PrivateRoute from "./layouts/PrivateRoute";
 // import PublicRoute from "./layouts/PublicRoute";
 
@@ -33,15 +34,20 @@ const router = createBrowserRouter([
         path: "/signin", 
         element: <PublicRoute><Signin /></PublicRoute>
       },
+      {
+        path:"/forgot-password",
+        element:<PublicRoute><Forgotpassword/></PublicRoute>
+
+      },
       { 
         path: "/:userId/otp-verification",
         element: <PublicRoute><OTPVerification /></PublicRoute> 
       },
-      { path: "*",
-        element: <NotFound />
-      },
     ]
-  }
+  },
+  { path: "*",
+      element: <NotFound />
+  },
 ])
 
 const App = () => {

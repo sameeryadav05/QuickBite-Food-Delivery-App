@@ -1,7 +1,10 @@
 import nodemailer from "nodemailer";
+import ExpressError from "./ExpressError.js";
+import { HttpStatus } from "http-status-codes-helper";
 
 async function sendOtp(email,otp){
-    const transporter = nodemailer.createTransport({
+    try {
+            const transporter = nodemailer.createTransport({
         service:'gmail',
         auth:{
             user:process.env.EMAIL,
@@ -18,6 +21,10 @@ async function sendOtp(email,otp){
     };
 
     await transporter.sendMail(mailOptions);
+    } catch (error) {
+        console.log("failed to send email");
+        throw new ExpressError(HttpStatus.INTERNAL_SERVER_ERROR,"Failed to send email")
+    }
 }
 
 

@@ -26,10 +26,14 @@ const OTPVerification = () => {
     }
   }
 
-  if(isAuthenticated)
-  {
-    return navigate('/',{replace:true})
+
+useEffect(() => {
+  if (isAuthenticated) {
+    navigate('/', { replace: true });
   }
+}, [isAuthenticated]);
+
+
   // When user types a number
   function handleChange(e, index) {
     let value = e.target.value;

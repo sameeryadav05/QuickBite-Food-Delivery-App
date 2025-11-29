@@ -120,7 +120,12 @@ export const signin = WrapAsync(async (req, res) => {
   if (!user) {
     throw new ExpressError(HttpStatus.NOT_FOUND, "Invalid Credentials!");
   }
-  if(!user.isVerified)
+
+
+
+  const isCorrectPassword = await user.comparePassword(password);
+
+  if(!user.isVerified && isCorrectPassword)
   {
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     user.otp = otp;
@@ -129,11 +134,8 @@ export const signin = WrapAsync(async (req, res) => {
 
     await sendOtp(user.email, otp);
 
-    res.status(HttpStatus.UNAUTHORIZED).json({success:false,message:"Please Verify Your Account !",userId:user._id})
+    return res.status(HttpStatus.UNAUTHORIZED).json({success:false,message:"Please Verify Your Account !",userId:user._id})
   }
-
-
-  const isCorrectPassword = await user.comparePassword(password);
   if (!isCorrectPassword) {
     throw new ExpressError(HttpStatus.UNAUTHORIZED, "Invalid Credentials!");
   }

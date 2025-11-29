@@ -6,8 +6,7 @@ const Home = () => {
     <div className='flex gap-5'>
         <NavLink to={'/signup'}>signup</NavLink>
         <NavLink to={'/signin'} >signin</NavLink>
-        <NavLink to={'/otp-verification'} >otp</NavLink>
-        <NavLink to={'/otp-verification1212'} >404</NavLink>
+        <NavLink to={'/hbjnsdds'} >404</NavLink>
     </div>
   )
 }

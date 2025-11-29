@@ -1,9 +1,10 @@
 import React from 'react'
 import { TiArrowBack } from "react-icons/ti";
 import ramen from '../assets/ramen.png'
-import { NavLink } from 'react-router-dom';
+import {useNavigate } from 'react-router-dom';
 import { motion } from "motion/react"
 const NotFound = () => {
+    const navigate = useNavigate()
   return (
     <div className='h-screen w-screen flex justify-center items-center bg-bgColor'>
 
@@ -21,9 +22,8 @@ const NotFound = () => {
                 <p className='text-md font-extrabold text-gray-400 lg:text-3xl mt-2'>“Uh-oh! This dish isn't on the menu.”</p>
 
 
-                <NavLink to={-1} className={`btn btn-wide bg-primaryColor hover:bg-hoverColor mt-10 text-white mb-1`}>
-                    Back <TiArrowBack />
-                </NavLink>
+                
+                    <button onClick={()=>navigate(-1)} className='btn btn-wide bg-primaryColor hover:bg-hoverColor mt-10 text-white mb-1'>Back <TiArrowBack /></button>
             </div>
             
         </motion.div>

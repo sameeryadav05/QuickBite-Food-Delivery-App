@@ -34,4 +34,4 @@ app.use((err,req,res,next)=>{
     res.status(status).json({success:false,message:message})
 })
 
-ConnectDb().then(()=>app.listen(port,()=>console.log("Server is Running"))).catch(err=>console.log(err.message))
+ConnectDb().then(()=>app.listen(port,()=>console.log(`Server is Running ${port}`))).catch(err=>console.log(err.message))

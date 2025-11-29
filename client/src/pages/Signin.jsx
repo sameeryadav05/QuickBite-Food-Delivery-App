@@ -46,7 +46,7 @@ const Signin = () => {
       {loading&&<Loader/>}
         <div className="min-h-screen w-full flex justify-center items-center p-4 bg-bgColor">
           <div className='bg-white rounded-xl shadow-lg w-full max-w-md p-1 pb-4 border-[1px] border-borderColor  md:max-w-lg lg:p-3 lg:pb-6'>
-            <h1 className='flex items-center text-primaryColor gap-2 font-bold text-2xl lg:text-3xl tracking-wider'>
+            <h1 className='flex items-center text-primaryColor gap-2 font-bold text-2xl lg:text-3xl tracking-wide'>
               <img src={ramen} className='size-14 lg:size-20 shadow-sm'/>
               QuickBite
             </h1>

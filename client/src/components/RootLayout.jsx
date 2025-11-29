@@ -1,9 +1,11 @@
 
-import { Outlet, useNavigation } from 'react-router-dom'
+import { Outlet, useLocation, useNavigation } from 'react-router-dom'
 import Loader from './Loader';
+
 
 function RootLayout() {
   const navigation = useNavigation();
+
   let isLoading = navigation.state === "loading";
   if(isLoading) return <Loader/>
 
