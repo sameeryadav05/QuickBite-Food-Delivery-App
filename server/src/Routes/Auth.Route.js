@@ -1,5 +1,5 @@
 import express from 'express'
-import { ResendOtp, signin, signout, signup, VerifyOtp } from '../controllers/auth.controller.js'
+import { forgotpassword, ResendOtp, resetPassword, signin, signout, signup, VerifyOtp, verifyresetotp } from '../controllers/auth.controller.js'
 import verifyAuth from '../middlewares/Auth.js';
 import { HttpStatus } from 'http-status-codes-helper';
 
@@ -16,5 +16,9 @@ AuthRouter.post('/Resend-otp',ResendOtp)
 AuthRouter.get('/verify-user',verifyAuth,(req,res)=>{
     res.status(HttpStatus.OK).json({success:true,message:"User is Authenticated !",user:req.user})
 })
+
+AuthRouter.post('/forgotpassword-otp',forgotpassword)
+AuthRouter.post('/verify-reset',verifyresetotp)
+AuthRouter.post('/resetpassword',resetPassword)
 
 export default AuthRouter

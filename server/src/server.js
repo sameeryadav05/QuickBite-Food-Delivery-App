@@ -6,7 +6,10 @@ import {HttpStatus} from 'http-status-codes-helper'
 import mainRouter from './Routes/Main.Route.js';
 import cookieparser from 'cookie-parser'
 import cors from 'cors'
+import Redis from 'ioredis'
 dotenv.config();
+
+
 
 const app = express();
 const port = process.env.PORT || 5000
@@ -33,5 +36,14 @@ app.use((err,req,res,next)=>{
     const {status=HttpStatus.INTERNAL_SERVER_ERROR,message="Internal Server Error"} = err
     res.status(status).json({success:false,message:message})
 })
+
+export const redis = new Redis({
+    host:process.env.HOST,
+    port:process.env.REDIS_PORT,
+    password:process.env.REDIS_PASSWORD,
+})
+
+redis.on('connect',()=>console.log("connected to redis"))
+
 
 ConnectDb().then(()=>app.listen(port,()=>console.log(`Server is Running ${port}`))).catch(err=>console.log(err.message))

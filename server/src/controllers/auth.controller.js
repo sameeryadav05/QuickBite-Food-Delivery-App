@@ -168,3 +168,79 @@ export const signout = WrapAsync((req,res)=>{
     res.clearCookie('QuickBite-token').json({success:true,message:'logout SuccessFully !'})
 })
 
+
+
+export const forgotpassword = WrapAsync(async (req,res)=>{
+  const { email } = req.body;
+
+  const user = await User.findOne({ email });
+  if(!user){
+    throw new ExpressError(HttpStatus.NOT_FOUND, "User not found!");
+  }
+
+  const otp = Math.floor(1000 + Math.random() * 9000).toString();
+
+  user.resetOtp = otp;
+  user.resetOtpExpires = Date.now() + 2 * 60 * 1000; // 2 min
+  user.resetVerified = false;
+
+  await user.save();
+  await sendOtp(email, otp);
+
+  res.status(HttpStatus.OK).json({
+    success: true,
+    message: "4-digit verification code sent to email"
+  });
+});
+
+
+export const verifyresetotp = WrapAsync(async (req,res)=>{
+  const { email, otp } = req.body;
+
+  const user = await User.findOne({ email })
+    .select("+resetOtp +resetOtpExpires");
+
+  if(!user){
+    throw new ExpressError(HttpStatus.NOT_FOUND, "User not Found!");
+  }
+
+  if(!user.resetOtp || user.resetOtpExpires < Date.now()){
+    throw new ExpressError(HttpStatus.GONE, "Incorrect or Expired OTP!");
+  }
+
+  if(String(otp) !== String(user.resetOtp)){
+    throw new ExpressError(HttpStatus.UNAUTHORIZED, "Invalid OTP!");
+  }
+
+  user.resetVerified = true;
+  user.resetOtp = null;
+  user.resetOtpExpires = null;
+
+  await user.save();
+
+  res.status(HttpStatus.OK).json({
+    success: true,
+    message: "OTP verified successfully"
+  });
+});
+
+
+export const resetPassword = WrapAsync(async (req,res)=>{
+    const {email,newpassword} = req.body
+
+    const user = await User.findOne({email}).select("+password");
+    if (!user) {
+        throw new ExpressError(HttpStatus.NOT_FOUND, "User not Found!");
+    }
+
+    if(!user.resetVerified)
+    {
+        throw new ExpressError(401,"Account is Not verified !")
+    }
+
+    user.password = newpassword;
+
+    user.save();
+
+    res.status(HttpStatus.OK).json({success:false,message:"Password reset successfully !"})
+})

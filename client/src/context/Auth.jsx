@@ -9,12 +9,15 @@ const Auth = ({children}) => {
     const [isAuthenticated,setisAuthenticated] = useState(null)
     const [user,setuser] = useState(null)
 
+
+
     useEffect(()=>{
         async function verifyAuth() {
             try {
                 const res = await api.get('/auth/verify-user');
                 setisAuthenticated(true);
                 setuser(res.data.user)
+                
             } catch (error) {
                 setisAuthenticated(false);
                 setuser(null);
@@ -22,6 +25,7 @@ const Auth = ({children}) => {
         }
         verifyAuth()
     },[])
+
   return (
     <Authcontext.Provider value={{isAuthenticated,setisAuthenticated,user,setuser}}>
         {children}
