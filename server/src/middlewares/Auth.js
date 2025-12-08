@@ -38,7 +38,7 @@ const verifyAuth = WrapAsync(async(req,res,next)=>{
         {
             throw new ExpressError(HttpStatus.UNAUTHORIZED,"session expired, please login again !");
         } 
-        await redis.set(`user:${id}`,JSON.stringify(user),'EX',120);
+        // await redis.set(`user:${id}`,JSON.stringify(user),'EX',120);
         
         req.user = {
             id:user._id,
