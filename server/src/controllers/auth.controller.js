@@ -88,6 +88,108 @@ export const VerifyOtp = WrapAsync(async (req, res) => {
     });
 });
 
+export const GoogleSignup = WrapAsync(async (req, res) => {
+  const { fullname, email, mobile, role } = req.body;
+
+  let user = await User.findOne({ email });
+
+
+  if (user) {
+    const token = generateToken(user._id);
+
+   res.cookie("QuickBite-token", token, {
+      httpOnly: true,
+      secure: false, // ✅ true in production
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Login successful!",
+      user: {
+        id: user._id,
+        fullname: user.fullname,
+        email: user.email,
+        mobile: user.mobile,
+        role: user.role,
+      },
+    });
+  }
+
+
+  user = await User.create({
+    fullname,
+    email,
+    mobile,
+    role,
+  });
+  user.isVerified = true
+  await user.save();
+
+  const token = generateToken(user._id);
+
+  res.cookie("QuickBite-token", token, {
+    httpOnly: true,
+    secure: false, // ✅ true in production
+    sameSite: "strict",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  });
+
+  res.status(201).json({
+    success: true,
+    message: "User registered successfully!",
+    user: {
+      id: user._id,
+      fullname: user.fullname,
+      email: user.email,
+      mobile: user.mobile,
+      role: user.role,
+    },
+  });
+});
+
+export const GoogleSignin = WrapAsync(async(req,res)=>{
+
+  const {email} = req.body;
+  
+  if (!email) {
+    throw new ExpressError(HttpStatus.BAD_REQUEST, "Email is required!");
+  }
+
+  let user = await User.findOne({ email });
+
+  if(!user)
+  {
+    throw new ExpressError(HttpStatus.BAD_REQUEST,"User Not Found !")
+  }
+
+  const token = generateToken(user._id);
+
+  res.cookie("QuickBite-token", token, {
+    httpOnly: true,
+    secure: false, // ✅ true in production
+    sameSite: "strict",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  });
+
+  res.status(201).json({
+    success: true,
+    message: "Login successfully!",
+    user: {
+      id: user._id,
+      fullname: user.fullname,
+      email: user.email,
+      mobile: user.mobile,
+      role: user.role,
+    },
+  });
+
+})
+
+
+
+
 
 export const ResendOtp = WrapAsync(async(req,res)=>{
     const {userId} = req.body
