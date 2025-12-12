@@ -83,6 +83,7 @@ export const VerifyOtp = WrapAsync(async (req, res) => {
             fullname: user.fullname,
             email: user.email,
             mobile: user.mobile,
+            profile:user.profile,
             role: user.role
         }
     });
@@ -260,6 +261,7 @@ export const signin = WrapAsync(async (req, res) => {
         fullname: user.fullname,
         email: user.email,
         mobile: user.mobile,
+        profile:user.profile,
         role: user.role,
       },
     });

@@ -28,6 +28,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required:true
     },
+    profile:{
+        type:String,
+        default:"https://icons.iconarchive.com/icons/papirus-team/papirus-status/512/avatar-default-icon.png"
+    },
     role:{
         type: String,
         enum:["user","owner","deliveryboy"],

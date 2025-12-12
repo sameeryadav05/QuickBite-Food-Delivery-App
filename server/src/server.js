@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+dotenv.config();
 import ConnectDb from './config/Db.js';
 import ExpressError from './utils/ExpressError.js'
 import {HttpStatus} from 'http-status-codes-helper'
@@ -7,7 +8,8 @@ import mainRouter from './Routes/Main.Route.js';
 import cookieparser from 'cookie-parser'
 import cors from 'cors'
 import Redis from 'ioredis'
-dotenv.config();
+import ProfileUpload from './config/multer.js';
+
 
 
 
@@ -26,6 +28,18 @@ app.use(cors({
 
 // Router
 app.use('/api',mainRouter);
+
+// app.post('/upload',ProfileUpload.single("profile"),async (req,res)=>{
+//     try {
+//         console.log(req.file)
+//         res.send("file upload successfully !")
+        
+//     } catch (error) {
+//         console.log(error)
+//         res.send("failed to upload files")
+//     }
+// })
+
 
 //404 handler
 app.use((req,res,next)=>{

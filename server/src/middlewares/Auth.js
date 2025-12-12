@@ -28,6 +28,7 @@ const verifyAuth = WrapAsync(async(req,res,next)=>{
                 email: user.email,
                 mobile: user.mobile,
                 role: user.role,
+                profile:user.profile,
                 isVerified: user.isVerified,
             };
             return next();
@@ -46,6 +47,7 @@ const verifyAuth = WrapAsync(async(req,res,next)=>{
             email:user.email,
             mobile:user.mobile,
             role:user.role,
+            profile:user.profile,
             isVerified:user.isVerified
         };
         next();
